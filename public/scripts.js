@@ -15,14 +15,18 @@ window.addEventListener("load", function(){
 
 	var makeDOMelements = function(user_comments){
 		comments = []
+		debugger;
 		for (i = 0; i < user_comments.length; i++) {
+			debugger;
 			comments[i] = document.createElement("div");
 			comments[i].setAttribute("class", "comment media");
-		    comments[i].appendChild(document.createTextNode("\n")); // possibly remove
+		   // comments[i].appendChild(document.createTextNode("\n")); // possibly remove
 			comments[i].appendChild(buildImage(user_comments[i], i));
+			
 			//comments[i].appendChild(document.createTextNode("\n")); // possibly remove
+		 debugger;
 			comments[i].appendChild(buildMediaInfo(user_comments[i], i));
-			comments[i].appendChild(document.createTextNode("\n")); // possibly remove
+			// comments[i].appendChild(document.createTextNode("\n")); // possibly remove
 
 			// comments[i].appendChild(buildCommentInfo(user_comments, i));
 			// comments[i].appendChild(buildReplies(user_comments, i));
@@ -39,31 +43,37 @@ window.addEventListener("load", function(){
 
 
 	var buildReplies = function(user_comments, i){
+				 debugger;
+
 		var repliesArea = document.createElement("div");
 		repliesArea.setAttribute("class", "replies")
-		repliesArea.style.display = "none"; 
-		 debugger;
-		repliesArea.appendChild(appendReplies(user_comments, i));    
+		repliesArea.style.display = "block"; 
+		 // debugger;
+		for (r = 0; r < user_comments.length; r++) {
+			repliesArea.appendChild(appendReplies(user_comments[r], i));    
+		}
 		return repliesArea
 	}
 
 	var appendReplies = function(user_comments, i){
-		var replies = []
-		if (user_comments.user_replies.length > 0) {
-			for (r = 0; r < user_comments.user_replies.length ; r ++) {
-				replies[r] = document.createElement("div");
-				replies[r].setAttribute("class", "comment media");
-				replies[r].appendChild(buildImage(user_comments.user_replies[r], i));
-				replies[r].appendChild(buildMediaInfo(user_comments.user_replies[r], i));
-				replies[r].appendChild(buildCommentInfo(user_comments.user_replies[r], i));
-				replies[r].appendChild(buildReplies(user_comments.user_replies[r], i));			
-			}
-		}
+				 debugger;
 
-		return replies
+		var reply = document.createElement("div");
+		// debugger;
+		reply.setAttribute("class", "comment media");
+		reply.appendChild(buildImage(user_comments, i));
+		reply.appendChild(buildMediaInfo(user_comments, i));
+		//reply.appendChild(buildCommentInfo(user_comments, i));
+		//reply.appendChild(buildReplies(user_comments, i));			
+	
+		
+
+		return reply
 	}
 
 	var buildCommentInfo = function(user_comments, i){
+				 debugger;
+
 		var comInfo = document.createElement("div");
 		comInfo.setAttribute("class", "comment__info");		
 		var spacerSpan = document.createElement("span");
@@ -80,9 +90,6 @@ window.addEventListener("load", function(){
 		comInfo.appendChild(spacerSpan);
 		comInfo.appendChild(replyLink);
 
-
-
-
 		comInfo.appendChild(document.createElement("span"));
 		comInfo.childNodes[3].innerHTML = "&nbsp" + user_comments.likes +" likes ";
 		comInfo.appendChild(document.createTextNode(user_comments.timestamp))
@@ -92,16 +99,23 @@ window.addEventListener("load", function(){
 	}
 
 	var buildMediaInfo = function(user_comments, i){
+				 debugger;
+
 		var medInfo = document.createElement("div");
 		medInfo.setAttribute("class", "media__info");
-		medInfo.appendChild(document.createElement("a"));
-		medInfo.childNodes[0].href = "#";
-		// medInfo.childNodes[0].title = user_comments[i].post_owner.name;
-		medInfo.childNodes[0].appendChild(document.createTextNode(user_comments.post_owner.name));
+		var nameLink = document.createElement("a");
+		nameLink.href = "#"
+		nameLink.appendChild(document.createTextNode(user_comments.post_owner.name));
+		medInfo.appendChild(nameLink);
 		medInfo.appendChild(document.createTextNode(" " + user_comments.content));
 		medInfo.appendChild(buildCommentInfo(user_comments, i))
-		// if (user_comments.user_replies.length > 0) {
-		// 	medInfo.appendChild(buildReplies(user_comments, i));
+		// debugger
+
+///	maybe?	kclszdcvkjdzhvkj.d	
+		// if () {
+			if (user_comments.user_replies.length > 0) {
+			 	medInfo.appendChild(buildReplies(user_comments.user_replies, i));
+			}
 		// }
 		return medInfo
 	}
@@ -109,6 +123,7 @@ window.addEventListener("load", function(){
 
 
 	var buildImage = function(user_comments, i){
+		 debugger;
 
 		var img = document.createElement("img");
 		img.setAttribute("src", user_comments.post_owner.img);
@@ -184,18 +199,18 @@ window.addEventListener("load", function(){
 // 			persons[i].appendChild(document.createElement("br")) 
 // 			persons[i].appendChild(document.createElement("br")) 
 // 		}
-// 		// debugger;
+// 		// // debugger;
 // 		appendToDom(persons);
 // 	}
 
 // 	var appendToDom = function(persons){
 // 		 body = document.getElementsByTagName("body")[0]
 // 		// theHTML = "";
-// 		// debugger;
+// 		// // debugger;
 // 		for (i = 0; i < persons.length; i++){
 // 			body.appendChild(persons[i]);
 // 		}
-// 		// debugger 
+// 		// // debugger 
 		
 		
 // 	}
