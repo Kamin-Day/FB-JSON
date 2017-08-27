@@ -15,16 +15,16 @@ window.addEventListener("load", function(){
 
 	var makeDOMelements = function(user_comments){
 		comments = []
-		debugger;
+//		debugger;
 		for (i = 0; i < user_comments.length; i++) {
-			debugger;
+	//		debugger;
 			comments[i] = document.createElement("div");
 			comments[i].setAttribute("class", "comment media");
 		   // comments[i].appendChild(document.createTextNode("\n")); // possibly remove
 			comments[i].appendChild(buildImage(user_comments[i], i));
 			
 			//comments[i].appendChild(document.createTextNode("\n")); // possibly remove
-		 debugger;
+	//	 debugger;
 			comments[i].appendChild(buildMediaInfo(user_comments[i], i));
 			// comments[i].appendChild(document.createTextNode("\n")); // possibly remove
 
@@ -32,6 +32,8 @@ window.addEventListener("load", function(){
 			// comments[i].appendChild(buildReplies(user_comments, i));
 
 		}
+		debugger
+		
 		for (i = 0; i < comments.length ; i ++) {
 			commentArea.appendChild(comments[i])
 		}
@@ -43,12 +45,12 @@ window.addEventListener("load", function(){
 
 
 	var buildReplies = function(user_comments, i){
-				 debugger;
+			//	 debugger;
 
 		var repliesArea = document.createElement("div");
 		repliesArea.setAttribute("class", "replies")
 		repliesArea.style.display = "block"; 
-		 // debugger;
+		 //// debugger;
 		for (r = 0; r < user_comments.length; r++) {
 			repliesArea.appendChild(appendReplies(user_comments[r], i));    
 		}
@@ -56,10 +58,10 @@ window.addEventListener("load", function(){
 	}
 
 	var appendReplies = function(user_comments, i){
-				 debugger;
+			//	 debugger;
 
 		var reply = document.createElement("div");
-		// debugger;
+		//// debugger;
 		reply.setAttribute("class", "comment media");
 		reply.appendChild(buildImage(user_comments, i));
 		reply.appendChild(buildMediaInfo(user_comments, i));
@@ -72,7 +74,7 @@ window.addEventListener("load", function(){
 	}
 
 	var buildCommentInfo = function(user_comments, i){
-				 debugger;
+			//	 debugger;
 
 		var comInfo = document.createElement("div");
 		comInfo.setAttribute("class", "comment__info");		
@@ -99,7 +101,7 @@ window.addEventListener("load", function(){
 	}
 
 	var buildMediaInfo = function(user_comments, i){
-				 debugger;
+			//	 debugger;
 
 		var medInfo = document.createElement("div");
 		medInfo.setAttribute("class", "media__info");
@@ -109,10 +111,16 @@ window.addEventListener("load", function(){
 		medInfo.appendChild(nameLink);
 		medInfo.appendChild(document.createTextNode(" " + user_comments.content));
 		medInfo.appendChild(buildCommentInfo(user_comments, i))
-		// debugger
+		//// debugger
 
 ///	maybe?	kclszdcvkjdzhvkj.d	
 		// if () {
+
+
+
+			//Need a function here to check current data structure
+			// to see if current user_comments replies have already been 
+			// appended 
 			if (user_comments.user_replies.length > 0) {
 			 	medInfo.appendChild(buildReplies(user_comments.user_replies, i));
 			}
@@ -123,7 +131,7 @@ window.addEventListener("load", function(){
 
 
 	var buildImage = function(user_comments, i){
-		 debugger;
+	//	 debugger;
 
 		var img = document.createElement("img");
 		img.setAttribute("src", user_comments.post_owner.img);
@@ -199,18 +207,18 @@ window.addEventListener("load", function(){
 // 			persons[i].appendChild(document.createElement("br")) 
 // 			persons[i].appendChild(document.createElement("br")) 
 // 		}
-// 		// // debugger;
+// 		// //// debugger;
 // 		appendToDom(persons);
 // 	}
 
 // 	var appendToDom = function(persons){
 // 		 body = document.getElementsByTagName("body")[0]
 // 		// theHTML = "";
-// 		// // debugger;
+// 		// //// debugger;
 // 		for (i = 0; i < persons.length; i++){
 // 			body.appendChild(persons[i]);
 // 		}
-// 		// // debugger 
+// 		// //// debugger 
 		
 		
 // 	}
