@@ -1,81 +1,69 @@
+var log = console.log;
+
 window.addEventListener("load", function(){
-
+	// Element comments will be appended to
 	var commentArea = document.getElementsByClassName('post__comments')[0]
-
+	// request to get JSON information from server
 	var request = new XMLHttpRequest();
 	request.open("GET", "/posts");
 	request.send();
-	
+	// Once response is recieved, parse JSON to JS object
 	request.addEventListener("load", function(event){
 		postInfo = JSON.parse(event.target.response);
-		
-
+		// Call function, sending a list of comments
 		makeDOMelements(postInfo.post.user_comments)
 	});
 
+	// Builds comments content from JSON
 	var makeDOMelements = function(user_comments){
 		comments = []
-//		debugger;
-		for (i = 0; i < user_comments.length; i++) {
-	//		debugger;
+		for (var i = 0; i < user_comments.length; i++) {
+			log("user_comments[i] is ");
+			log(user_comments[i]);
+
+			// Creates a comment div, which will parent all of the comments information		
 			comments[i] = document.createElement("div");
 			comments[i].setAttribute("class", "comment media");
-		   // comments[i].appendChild(document.createTextNode("\n")); // possibly remove
-			comments[i].appendChild(buildImage(user_comments[i], i));
-			
-			//comments[i].appendChild(document.createTextNode("\n")); // possibly remove
-	//	 debugger;
-			comments[i].appendChild(buildMediaInfo(user_comments[i], i));
-			// comments[i].appendChild(document.createTextNode("\n")); // possibly remove
-
-			// comments[i].appendChild(buildCommentInfo(user_comments, i));
-			// comments[i].appendChild(buildReplies(user_comments, i));
-
+			// Adds the user image to the div
+			comments[i].appendChild(buildImage(user_comments[i]));
+			// Builds child divs
+			comments[i].appendChild(buildMediaInfo(user_comments[i]));
 		}
-		debugger
-		
-		for (i = 0; i < comments.length ; i ++) {
+		// Adds all comments to the comment area of the page
+		for (var i = 0; i < comments.length ; i ++) {
 			commentArea.appendChild(comments[i])
-		}
-		
+		}	
 	}
-
-          
-
-
-
-	var buildReplies = function(user_comments, i){
-			//	 debugger;
+	// Recieves a list of replies &
+	// Creates a replies div, then
+	// calls appendReplies for each reply in the list
+	var buildReplies = function(listOfReplies){
+		log("buildReplies")
+		log(listOfReplies)
 
 		var repliesArea = document.createElement("div");
-		repliesArea.setAttribute("class", "replies")
+		repliesArea.setAttribute("class", "replies");
 		repliesArea.style.display = "block"; 
-		 //// debugger;
-		for (r = 0; r < user_comments.length; r++) {
-			repliesArea.appendChild(appendReplies(user_comments[r], i));    
+		for (var r = 0; r < listOfReplies.length; r++) {
+			log("In buildReplies loop... Current index is:" + r)
+			log(listOfReplies[r])
+			repliesArea.appendChild(appendReplies(listOfReplies[r]));    
 		}
 		return repliesArea
 	}
-
-	var appendReplies = function(user_comments, i){
-			//	 debugger;
-
+	// recieves a single reply
+	// & then calls functions to construct them
+	var appendReplies = function(user_reply){
 		var reply = document.createElement("div");
-		//// debugger;
 		reply.setAttribute("class", "comment media");
-		reply.appendChild(buildImage(user_comments, i));
-		reply.appendChild(buildMediaInfo(user_comments, i));
-		//reply.appendChild(buildCommentInfo(user_comments, i));
-		//reply.appendChild(buildReplies(user_comments, i));			
-	
-		
+		reply.appendChild(buildImage(user_reply));
+		reply.appendChild(buildMediaInfo(user_reply));
 
-		return reply
+		return reply	
 	}
-
-	var buildCommentInfo = function(user_comments, i){
-			//	 debugger;
-
+	// recieves a single comment
+	// constructs div to append
+	var buildCommentInfo = function(user_comment){
 		var comInfo = document.createElement("div");
 		comInfo.setAttribute("class", "comment__info");		
 		var spacerSpan = document.createElement("span");
@@ -88,139 +76,42 @@ window.addEventListener("load", function(){
 		var replyLink = document.createElement("a");
 		replyLink.href = "#";
 		replyLink.title = "Replies";
-		replyLink.appendChild(document.createTextNode(user_comments.replies + " replies"));
+		replyLink.appendChild(document.createTextNode(user_comment.replies + " replies"));
 		comInfo.appendChild(spacerSpan);
 		comInfo.appendChild(replyLink);
-
 		comInfo.appendChild(document.createElement("span"));
-		comInfo.childNodes[3].innerHTML = "&nbsp" + user_comments.likes +" likes ";
-		comInfo.appendChild(document.createTextNode(user_comments.timestamp))
-
-
+		comInfo.childNodes[3].innerHTML = "&nbsp" + user_comment.likes +" likes ";
+		comInfo.appendChild(document.createTextNode(user_comment.timestamp))
       return comInfo
 	}
-
-	var buildMediaInfo = function(user_comments, i){
-			//	 debugger;
-
+	// recieves a single comment
+	// Creates a div to append, and calls functions to append children
+	var buildMediaInfo = function(user_comment){
+		log("buildMediaInfo");
+		log(user_comment.post_owner.name)
 		var medInfo = document.createElement("div");
 		medInfo.setAttribute("class", "media__info");
 		var nameLink = document.createElement("a");
 		nameLink.href = "#"
-		nameLink.appendChild(document.createTextNode(user_comments.post_owner.name));
+		nameLink.appendChild(document.createTextNode(user_comment.post_owner.name));
 		medInfo.appendChild(nameLink);
-		medInfo.appendChild(document.createTextNode(" " + user_comments.content));
-		medInfo.appendChild(buildCommentInfo(user_comments, i))
-		//// debugger
-
-///	maybe?	kclszdcvkjdzhvkj.d	
-		// if () {
-
-
-
-			//Need a function here to check current data structure
-			// to see if current user_comments replies have already been 
-			// appended 
-			if (user_comments.user_replies.length > 0) {
-			 	medInfo.appendChild(buildReplies(user_comments.user_replies, i));
-			}
-		// }
+		medInfo.appendChild(document.createTextNode(" " + user_comment.content));
+		medInfo.appendChild(buildCommentInfo(user_comment))
+		// if the comment has replies, send a list of replies to function
+		if (user_comment.user_replies.length > 0) {
+			medInfo.appendChild(buildReplies(user_comment.user_replies));
+		}
 		return medInfo
 	}
-
-
-
-	var buildImage = function(user_comments, i){
-	//	 debugger;
-
+	// recieves a single comment
+	// builds user IMG element to append 
+	var buildImage = function(user_comment){
 		var img = document.createElement("img");
-		img.setAttribute("src", user_comments.post_owner.img);
-		// OPTIONAL??  img.setAttribute("alt", "Profile Image");
+		img.setAttribute("src", user_comment.post_owner.img);
         img.setAttribute("class", "profilePhoto");
         return img
 	}
 });
 
 
-          //   var userImg = document.createElement("img");
-          //   userImg.setAttribute("src", "images/user.png");
-          //   userImg.setAttribute("alt", "Profile Image");
-          //   userImg.setAttribute("class", "profilePhoto");
-          //   var divCommentMedia = document.createElement("div");
-          //   divCommentMedia.setAttribute("class", "comment media");
-          //   var divMediaInfo = document.createElement("div");
-          //   divMediaInfo.setAttribute("class", "media__info");
-          //   var userNameLink = document.createElement("a");
-          //   var userName = document.createTextNode("Name 1");
-          //   userNameLink.appendChild(userName);
-          //   userNameLink.title = "Name 1";
-          //   userNameLink.href = "#";
-          // //  userNameLink.appendChild(userName);
-          //   var commentText = document.createTextNode(" " + commentMessage);
-          //   var divCommentInfo = document.createElement("div");
-          //   divCommentInfo.setAttribute("class", "comment__info");
-          //   var likeLink = document.createElement("a");
-          //   var likeText = document.createTextNode("Like");
-          //   likeLink.appendChild(likeText);
-          //   likeLink.title = "Like";
-          //   likeLink.href = "#";
-          //   //likeLink.appendChild(likeText);
-          //   var replyText = document.createTextNode("Reply");
-          //   var replyLink = document.createElement("a");
-          //   // replyLink.appendChild(likeText);
-          //   replyLink.title = "Reply";
-          //   replyLink.href = "#";
-          //   replyLink.appendChild(replyText);
-          //   var commentSpan = document.createElement("span");
-          //   commentSpan.innerHTML = " 0 likes"
-          //   commentDate = document.createTextNode("Just now");
-          //   var spaceText = document.createTextNode("  ");
-          //   var linkBR = document.createTextNode(" ");
-          //   var spacerSpan = document.createElement("span");
-          //   space
-// var request = new XMLHttpRequest();
-// 	request.open("GET", "/people");
-// 	request.send();
-	
-// 	request.addEventListener("load", function(event){
-// 		people = JSON.parse(event.target.response);
-// 		makeDOMelements(people)
-// 	});
-
-
-// // var newdiv = document.createElement("DIV");
-// // newdiv.appendChild(document.createTextNode("some text"));
-// // document.body.appendChild(newdiv);
-	
-
-// 	var makeDOMelements = function(people){
-		
-// 		var persons = []
-// 		for (i = 0; i < people.length; i++) {
-// 			persons[i] = document.createElement("div");
-// 			persons[i].appendChild(document.createElement("li")).appendChild(document.createTextNode("Name: " + people[i].fname + " " + people[i].lname))
-// 			persons[i].appendChild(document.createElement("li")).appendChild(document.createTextNode("Phone Number: " + people[i].tel))
-// 			persons[i].appendChild(document.createElement("li")).appendChild(document.createTextNode("Address: " + people[i].address))
-// 			persons[i].appendChild(document.createElement("li")).appendChild(document.createTextNode("City: " + people[i].city))
-// 			persons[i].appendChild(document.createElement("li")).appendChild(document.createTextNode("State: " + people[i].state))
-// 			persons[i].appendChild(document.createElement("li")).appendChild(document.createTextNode("Zip: " + people[i].zip))
-// 			persons[i].appendChild(document.createElement("br")) 
-// 			persons[i].appendChild(document.createElement("br")) 
-// 		}
-// 		// //// debugger;
-// 		appendToDom(persons);
-// 	}
-
-// 	var appendToDom = function(persons){
-// 		 body = document.getElementsByTagName("body")[0]
-// 		// theHTML = "";
-// 		// //// debugger;
-// 		for (i = 0; i < persons.length; i++){
-// 			body.appendChild(persons[i]);
-// 		}
-// 		// //// debugger 
-		
-		
-// 	}
-
-// });
+       
